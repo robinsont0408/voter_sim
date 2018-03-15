@@ -57,78 +57,80 @@ class Simulator < World
     def first_stop
         begin
             puts "\nWelcome to Terry Robinson's Voter Simulator " # <<< welcome message   
-            puts message[0]
+            puts @message[0]
         rescue Invalid_Input
-            puts options  
+            puts @options  
             choice = gets.chomp.downcase.gsub(/[^a-z0-9\s]/i, '')[0] # getting the first letter from user response
 
-            if options.each.values.include? choice
-                puts message[1] + options(choice).downcase.gsub(/[()]/, "")
-                @simulation.choice
-            
+            if @options.each.values.include? choice
+                puts @message[1] + @options.key("#{choice}").downcase.gsub(/[()]/, "")
+                
             else
                 raise Invalid_Input
             end
         end
+        
+        @simulation.choice
     end
     
     def c
         begin
-            puts message[5]
+            puts @message[5]
             new_name = gets.downcase.gsub(/,/, "").split(" ").map(&:capitalize)
         rescue Invalid_Name
             if new_name.length != (2)
                 raise Invalid_Name
             else
                 verified = new_name.join(" ")
-                puts message[9] + verified
-                puts message[4]+reg_ppl.keys.to_s.gsub(/[()]/, '')
+                puts @message[9] + verified
+                puts @message[4]+@reg_ppl.keys.to_s.gsub(/[()]/, '')
                 mice_n_men = gets.chomp.downcase.gsub(/[^a-z0-9\s]/i, '')[0]#<asking user if they want to be a voter or politician
-                puts message[7] + reg_ppl.key("#{mice_n_men}")
-                puts message[8] 
-                puts view.keys
+                puts @message[7] + @reg_ppl.key("#{mice_n_men}")
+                puts @message[8] 
+                puts @view.keys
                 decision = gets.chomp.downcase.gsub(/[^a-z0-9\s]/, '')[0]
-                future_vote = view.key("#{decision}").gsub(/[()]/, "")
+                future_vote = @view.key("#{decision}").gsub(/[()]/, "")
 
-                if view.values.include? decision
-                    puts message[10]+future_vote
+                if @view.values.include? decision
+                    puts @message[10]+future_vote
                     waynes_world.create_voter(verified, future_vote)
                 end
 
-                unless view.values.include? decision 
-                    puts message[2]
+                unless @view.values.include? decision 
+                    puts @message[2]
                 end
             end
         end
     end
 
-    if pawty.values.include? mice_n_men
-        puts message[7] + reg_ppl.key("#{mice_n_men}")
-        puts message[8]
-        puts pawty.keys
+    if @pawty.values.include? mice_n_men
+        puts @message[7] + @reg_ppl.key("#{mice_n_men}")
+        puts @message[8]
+        puts @pawty.keys
         dishizzin = gets.chomp.downcase.gsub(/[^a-z0-9\s]/, '')[0]
-        future_pol = pawty.key("#{dishizzin}").gsub(/[()]/, "")
+        future_pol = @pawty.key("#{dishizzin}").gsub(/[()]/, "")
 
         if dishizzin == "d" || "r"
-            puts message[10] + future_pol
+            puts @message[10] + future_pol
             waynes_world.create_politician(verified, future_pol)
         end
 
-        unless pawty.values.include? dishizzin
-            puts message[2]
+        unless @pawty.values.include? dishizzin
+            puts @message[2]
         end      
     end
 
     end
     
-    def l
+    def l#<<<<<< for l-q its all the same code
+        
         begin
-            puts message[11]+reg_ppl.each.keys
+            puts @message[11]+@reg_ppl.each.keys
             
         rescue Invalid_Input
             choice2 = gets.chomp.downcase.gsub(/[^a-z0-9\s]/i, '')[0]
 
-            if reg_ppl.values.include? choice2
+            if @reg_ppl.values.include? choice2
                 @simulation.(choice2)
             
             else
@@ -139,12 +141,12 @@ class Simulator < World
     
     def u
         begin
-            puts message[11]+reg_ppl.each.keys
+            puts @message[11]+@reg_ppl.each.keys
             
         rescue Invalid_Input
             choice3 = gets.chomp.downcase.gsub(/[^a-z0-9\s]/i, '')[0]
 
-            if reg_ppl.values.include? choice3
+            if @reg_ppl.values.include? choice3
                 @simulation.(choice3)
             
             else
@@ -155,12 +157,12 @@ class Simulator < World
     
     def d
         begin
-        puts message[11]+reg_ppl.each.keys
+        puts @message[11]+@reg_ppl.each.keys
 
     rescue Invalid_Input
         choice4 = gets.chomp.downcase.gsub(/[^a-z0-9\s]/i, '')[0]
 
-        if reg_ppl.values.include? choice4
+        if @reg_ppl.values.include? choice4
             @simulation.(choice4)
 
         else

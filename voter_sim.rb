@@ -3,15 +3,13 @@ require "./person.rb"
 require "./voter.rb"
 require "./politician.rb"
 
-options = [ #<<<<<<<<<<simulator options
-    "(C)reate a new registration",
-    "(L)ist people who have registered ",
-    "(U)pdate the list",
-    "(D)elete someone from the list",
-    "(Q)uit the simulation"
-    ]
-    
-opt = ["c", "l", "u", "d", "q"]
+options = { #<<<<<<<<<<simulator options
+    "(C)reate a new registration" => "c",
+    "(L)ist people who have registered " => "l",
+    "(U)pdate the list" => "u",
+    "(D)elete someone from the list" => "d",
+    "(Q)uit the simulation" => "q"
+    }
     
 message = [ # <<<<<<<<<<<  message bank
     "\nWhat would you like do do? ",#0
