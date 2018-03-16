@@ -2,6 +2,9 @@ require "./world.rb"
 require "./person.rb"
 require "./voter.rb"
 require "./politician.rb"
+require "./error.rb"
+require "./error.rb"
+
 
 class Simulator < World
 #     attr_accessor 
@@ -33,7 +36,7 @@ class Simulator < World
     @reg_ppl = { #<<<<< type of voter options
         "(V)oter" => "v", #0
         "   or" => nil, #1
-        "(P)olitician" => "p" #3
+        "(P)olitician" => "p" #2
         }
 
     @view = {#<<<<political view options for voter
@@ -50,8 +53,14 @@ class Simulator < World
         "    or" => "or",  #1
         "(R)epublican" => "r" #2
         }
-    def initialize(name, party, politics)
+    def initialize(name, party, politics, voter)
         super(name, party, politics)
+        @message = message
+        @options = options
+        @reg_ppl = reg_ppl
+        @view = view
+        @pawty = pawty
+        
     end
     
     def first_stop
@@ -93,7 +102,13 @@ class Simulator < World
 
                 if @view.values.include? decision
                     puts @message[10]+future_vote
-                    waynes_world.create_voter(verified, future_vote)
+                    if decision == @view.value("(V)oter")
+                        waynes_world.create_voter(verified, future_vote)
+                    end
+                    
+                    if decision == @view.value("(P)olitician")
+                        waynes_world.create_politician(verified, future_vote)
+                    end
                 end
 
                 unless @view.values.include? decision 
@@ -101,9 +116,10 @@ class Simulator < World
                 end
             end
         end
+            @simulation.first_stop
     end
 
-    if @pawty.values.include? mice_n_men
+    if @pawty.values.include? @mice_n_men
         puts @message[7] + @reg_ppl.key("#{mice_n_men}")
         puts @message[8]
         puts @pawty.keys
@@ -119,8 +135,6 @@ class Simulator < World
             puts @message[2]
         end      
     end
-
-    end
     
     def l#<<<<<< for l-q its all the same code
         
@@ -130,13 +144,18 @@ class Simulator < World
         rescue Invalid_Input
             choice2 = gets.chomp.downcase.gsub(/[^a-z0-9\s]/i, '')[0]
 
-            if @reg_ppl.values.include? choice2
-                @simulation.(choice2)
+            if choice2 == @reg_ppl.value("(V)oter")
+                @simulation.list_voters
+            end
+            
+            if choice2 == @reg_ppl.value("(P)olitician")
+                @simulation.list_politicians
             
             else
                 raise Invalid_Input
             end
         end
+        @simulation.first_stop
     end
     
     def u
@@ -146,13 +165,60 @@ class Simulator < World
         rescue Invalid_Input
             choice3 = gets.chomp.downcase.gsub(/[^a-z0-9\s]/i, '')[0]
 
-            if @reg_ppl.values.include? choice3
-                @simulation.(choice3)
+            if choice3 == @reg_ppl.value("(V)oter")
+                puts "who would you like to update?"
+                updatev = gets.chomp.downcase.gsub(/,/, "").split(" ").map(&:capitalize).join(" ")
+                if voters.include? updatev
+                    puts "what would you like to change? (name or politics)?"
+                    changev = gets.chomp
+                    if changev = "name"
+                        puts "okay, what would you like the new name to be?"
+                        newnamev = gets.chomp.downcase.gsub(/,/, "").split(" ").map(&:capitalize).join(" ")
+                        @simulation.update_voter(updatev, "name", newname)
+                        puts "Your new name is #{newnamev}!"
+                    end
+                    
+                    if changev = "politics"
+                        puts "okay, what are your new political views?"
+                        newviewv = gets.chomp.downcase.gsub(/[^a-z0-9\s]/i, '')
+                        if politics.each.values.include? newviewv[0]
+                            @simulation.update_voter(updatev, "politics", newviewv)
+                            puts @voters.each(updatev)
+                        end
+                    end
+                end
+            end
+                         
+                
+            
+            if choice3 == @reg_ppl.value("(P)olitician")
+                  puts "who would you like to update?"
+                updatep = gets.chomp.downcase.gsub(/,/, "").split(" ").map(&:capitalize).join(" ")
+                if politicians.include? updatep
+                    puts "what would you like to change? (name or politics)?"
+                    changep = gets.chomp
+                    if changep = "name"
+                        puts "okay, what would you like the new name to be?"
+                        newnamep = gets.chomp.downcase.gsub(/,/, "").split(" ").map(&:capitalize).join(" ")
+                        @simulation.update_voter(updatep, "name", newnamep)
+                        puts "Your new name is #{newnamep}!"
+                    end
+                    
+                    if changev = "politics"
+                        puts "okay, what are your new political views?"
+                        newviewp = gets.chomp.downcase.gsub(/[^a-z0-9\s]/i, '')
+                        if pawty.each.values.include? newviewp[0]
+                            @simulation.update_voter(updatep, "politics", newviewp)
+                        end
+                        puts @voters.each(updatep)
+                    end
+                end
             
             else
                 raise Invalid_Input
             end
         end
+        @simulation.first_stop
     end
     
     def d
@@ -162,12 +228,38 @@ class Simulator < World
     rescue Invalid_Input
         choice4 = gets.chomp.downcase.gsub(/[^a-z0-9\s]/i, '')[0]
 
-        if @reg_ppl.values.include? choice4
-            @simulation.(choice4)
-
+        if choice4 == @reg_ppl.value("(V)oter")
+            puts "who would you like to delete?"
+            deletedv = gets.chomp.downcase.gsub(/,/, "").split(" ").map(&:capitalize).join(" ")
+            
+            if @voters.include? deletedv
+                puts "Are you sure you would like to delete #{deleted}? THIS CAN NOT BE UNDONE!"
+                ultimatumv = gets.chomp
+                
+                if ultimatumv == "y"
+                    @simulation.delete_voter(deletedv)
+                end
+            end
+        end
+            
+        if choice4 == @reg_ppl.value("(P)olitician")
+            puts "who would you like to delete?"
+            deleted = gets.chomp.downcase.gsub(/,/, "").split(" ").map(&:capitalize).join(" ")
+            
+            if @politicians.include? deleted
+                puts "Are you sure you would like to delete #{deleted}? THIS CAN NOT BE UNDONE!"
+                ultimatum = gets.chomp
+                
+                if ultimatum == "y"
+                    @simulation.delete_politician(deleted)
+                end
+            end
+        end
+                
         else
             raise Invalid_Input
         end
+       @simulation.first_stop
     end
     
     def q

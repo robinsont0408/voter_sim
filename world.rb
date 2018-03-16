@@ -1,4 +1,4 @@
-require "error.rb"
+require "./error.rb"
 require "./person.rb"
 require "./voter.rb"
 require "./politician.rb"
