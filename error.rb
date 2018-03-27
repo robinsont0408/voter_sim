@@ -1,17 +1,17 @@
-class Invalid_Name < TypeError
+class Invalid_Name
   def initialize(msg="please register with your First and Last name as it appears on your drivers license")
-    super
+      action = sleep 1 + restart()
   end
 end
 
-class User_Exists < TypeError
+class User_Exists
   def initialize(msg="Sorry that person has already been registered")
-    super
+      action = sleep 1 + restart()
   end
 end
 
-class Invalid_Input < TypeError
+class Invalid_Input
   def initialize(msg="\nI'm sorry, I do not understand that response. Please try again ")
-    super
+      action = sleep 1 + restart()
   end
 end

@@ -1,4 +1,4 @@
-require "./simulation"
+require "./work.rb"
 
 waynes_world = Simulator.new
 
